@@ -34,6 +34,14 @@ The overall goal is to have a six-degree-of-freedom robot arm holding a basket t
 
 ### Important: Only modify code in main.py
 
+### Important Message for 32-bit Windows users:
+
+You will need to include the 32-bit lib from V-REP, here is how:
+
+1. go to V-REP simulator directory
+2. go to folder programming/remoteApiBindings/lib/lib/Windows/32Bit
+3. copy the remoteApi.dll into the project directory, replace the original remoteApi.dll
+
 
 
 ### Project Milestone
