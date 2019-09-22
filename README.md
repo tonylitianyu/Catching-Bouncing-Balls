@@ -15,7 +15,9 @@ Step for running this repo
 
 5. In terminal, cd to this project directory
 
-6. python3 main.py, the robot arm will move.
+6. Click run in V-REP
+
+7. While V-REP is simulating, run python3 main.py, the robot arm will move.
 
 
 
