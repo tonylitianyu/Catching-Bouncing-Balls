@@ -5,6 +5,15 @@
 
 The overall goal is to have a six-degree-of-freedom robot arm holding a basket to collect ping-pong balls shot from a machine in the V-REP simulation environment.
 
+### Project Milestone
+
+|#| Date          | Details     |
+|-| ------------- |-------------|
+|1| 09/08/2019    | Project Proposal |
+|2| 09/22/2019    | Interface V-REP with Python using remote API |
+|3| 10/13/2019 | Coming soon      |
+|4| 11/03/2019 | Coming soon      |
+|5| 11/24/2019 | Coming soon      |
 
 ### Prerequisite Installed
 
@@ -41,15 +50,3 @@ You will need to include the 32-bit lib from V-REP, here is how:
 1. go to V-REP simulator directory
 2. go to folder programming/remoteApiBindings/lib/lib/Windows/32Bit
 3. copy the remoteApi.dll into the project directory, replace the original remoteApi.dll
-
-
-
-### Project Milestone
-
-| Date          | Details       |
-| ------------- |-------------|
-| 09/08/2019      | Project Proposal |
-| 09/22/2019      | Interface V-REP with Python using remote API|
-| 10/13/2019 | Coming soon      |
-| 11/03/2019 | Coming soon      |
-| 11/24/2019 | Coming soon      |
