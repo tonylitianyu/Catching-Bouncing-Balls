@@ -13,11 +13,11 @@ Step for running this repo
 
 4. The scene will load into V-REP
 
-5. In terminal, cd to this project directory
+5. In V-REP, Click 'Run' button on toolbar, V-REP starts simulating.
 
-6. Click run in V-REP
+6. While V-REP is simulating, cd to this project directory
 
-7. While V-REP is simulating, run python3 main.py, the robot arm will move.
+7. run python3 main.py, the robot arm will move.
 
 
 
