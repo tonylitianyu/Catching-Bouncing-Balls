@@ -16,14 +16,6 @@ vrep.simxFinish(-1) # just in case, close all opened connections
 clientID=vrep.simxStart('127.0.0.1',19999,True,True,5000,5) # Connect to V-REP
 if clientID!=-1:
     print ('Connected to remote API server')
-
-    # Now try to retrieve data in a blocking fashion (i.e. a service call):
-    res,joint1=vrep.simxGetObjectHandle(clientID,'UR3_joint1',vrep.simx_opmode_blocking)
-    # if res==vrep.simx_return_ok:
-    #     print ('Handle Object Successfully')
-    # else:
-    #     print ('Remote API function call returned with error code: ',res)
-
     vel=180
     accel=40
     jerk=80
@@ -34,6 +26,10 @@ if clientID!=-1:
     maxJerk = jerk*math.pi/180
     targetPos1 = 90*math.pi/180
     targetVel = 0
+
+    # Load joint 1
+    res,joint1=vrep.simxGetObjectHandle(clientID,'UR3_joint1',vrep.simx_opmode_blocking)
+
     code,pos = vrep.simxGetJointPosition(clientID,joint1,vrep.simx_opmode_streaming)
     print(pos)
     vrep.simxSetJointForce(clientID,joint1,3,vrep.simx_opmode_oneshot) #set max force for this joint
@@ -43,15 +39,15 @@ if clientID!=-1:
     #vrep.rmlMoveToJointPositions(objs,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
     time.sleep(2)
 
-
+    # Load joint 3
     res,joint3=vrep.simxGetObjectHandle(clientID,'UR3_joint3',vrep.simx_opmode_blocking)
     vrep.simxSetJointTargetPosition(clientID,joint3,targetPos1,vrep.simx_opmode_oneshot)
     time.sleep(2)
 
-    ################################## write code here
 
 
-    #################################
+
+    ################################# don't modify beyond this line
     # Now send some data to V-REP in a non-blocking fashion:
     vrep.simxAddStatusbarMessage(clientID,'Hello V-REP!',vrep.simx_opmode_oneshot)
 
