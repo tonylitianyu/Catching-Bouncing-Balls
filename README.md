@@ -13,7 +13,7 @@ The overall goal is to have a six-degree-of-freedom robot arm holding a basket t
 
 
 
-### Step for running this repo
+### Steps for running this repo
 
 1. Download V-REP from http://www.coppeliarobotics.com/downloads.html
 
