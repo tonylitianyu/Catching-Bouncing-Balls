@@ -27,6 +27,15 @@ if clientID!=-1:
     targetPos1 = 90*math.pi/180
     targetVel = 0
 
+    # sensor
+    res,posensor=vrep.simxGetObjectHandle(clientID,'LaserPointer_sensor',vrep.simx_opmode_blocking)
+    code,state,point,obj,normv = vrep.simxReadProximitySensor(clientID,posensor,vrep.simx_opmode_streaming)
+    print(state)
+    print(point)
+    print(obj)
+    print(normv)
+
+
     # Load joint 1
     res,joint1=vrep.simxGetObjectHandle(clientID,'UR3_joint1',vrep.simx_opmode_blocking)
 
@@ -44,7 +53,16 @@ if clientID!=-1:
     vrep.simxSetJointTargetPosition(clientID,joint3,targetPos1,vrep.simx_opmode_oneshot)
     time.sleep(2)
 
+    res,joint5=vrep.simxGetObjectHandle(clientID,'UR3_joint5',vrep.simx_opmode_blocking)
+    vrep.simxSetJointTargetPosition(clientID,joint5,-targetPos1,vrep.simx_opmode_oneshot)
+    time.sleep(2)
 
+
+    code,state,point,obj,normv = vrep.simxReadProximitySensor(clientID,posensor,vrep.simx_opmode_buffer)
+    print(state)
+    print(point)
+    print(obj)
+    print(normv)
 
 
     ################################# don't modify beyond this line
