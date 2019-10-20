@@ -59,7 +59,7 @@ if clientID!=-1:
 
 
     #Initialize forward kinematics calculation by inputting target joint angles.
-    jointAngles = np.array([0,0,targetPos1,targetPos1,targetPos1,0])
+    jointAngles = np.array([0,targetPos1,0,0,0,0])
 
     w1 = np.array([0,0,1])
     q1 = np.array([0.00012,0.000086,0.1475])

@@ -46,12 +46,12 @@ class FK_calculation:
 
         skew_s1 = self.find_skew_S(self.s[0])
 
-        T = expm(skew_s1*self.angles[0]*180/math.pi)
+        T = expm(skew_s1*self.angles[0])
 
         for i in range(1,6):
 
             skew_s = self.find_skew_S(self.s[i])
             T = T@expm(skew_s*self.angles[i])
-        
+
         T = T@self.M
         return T
