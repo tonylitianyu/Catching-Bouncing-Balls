@@ -59,36 +59,36 @@ if clientID!=-1:
 
 
     #Initialize forward kinematics calculation by inputting target joint angles.
-    jointAngles = np.array([targetPos1,0,0,0,0,0])
+    jointAngles = np.array([0,0,targetPos1,targetPos1,targetPos1,0])
 
     w1 = np.array([0,0,1])
-    q1 = np.array([0.525,-0.05,0.1475])
-    v1 = np.cross(w1,q1)
+    q1 = np.array([0.00012,0.000086,0.1475])
+    v1 = np.cross(-w1,q1)
     s1 = np.concatenate([w1,v1])
 
 
     w2 = np.array([-1,0,0])
-    q2 = np.array([0.4133,-0.05,0.1519])
+    q2 = np.array([-0.1115,0.000054,0.1519])
     v2 = np.cross(-w2,q2)
     s2 = np.concatenate([w2,v2])
 
     w3 = np.array([-1,0,0])
-    q3 = np.array([0.4133,-0.05,0.3955])
+    q3 = np.array([-0.1115,0.00013,0.3955])
     v3 = np.cross(-w3,q3)
     s3 = np.concatenate([w3,v3])
 
     w4 = np.array([-1,0,0])
-    q4 = np.array([0.4133,-0.05,0.6088])
+    q4 = np.array([-0.1115,0.000085,0.6088])
     v4 = np.cross(-w4,q4)
     s4 = np.concatenate([w4,v4])
 
-    w5 = np.array([0,0,-1])
-    q5 = np.array([0.4127,-0.05,0.6930])
+    w5 = np.array([0,0,1])
+    q5 = np.array([-0.1122,0.000085,0.6930])
     v5 = np.cross(-w5,q5)
     s5 = np.concatenate([w5,v5])
 
     w6 = np.array([-1,0,0])
-    q6 = np.array([0.4133,-0.05,0.6941])
+    q6 = np.array([-0.1115,0.000085,0.6941])
     v6 = np.cross(-w6,q6)
     s6 = np.concatenate([w6,v6])
 
@@ -96,7 +96,7 @@ if clientID!=-1:
 
     FK = FK_calculation(jointAngles,s)
     M = FK.find_M(endEffectorPos) #M for forward kinematics
-    
+
     T = FK.find_T()
     print('predicted end effector final T:')
     print(T)
@@ -113,25 +113,25 @@ if clientID!=-1:
     #vrep.rmlMoveToJointPositions(objs,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
     time.sleep(2)
 
-    # # Load joint 2
-    # res,joint2=vrep.simxGetObjectHandle(clientID,'UR3_joint2',vrep.simx_opmode_blocking)
-    # vrep.simxSetJointTargetPosition(clientID,joint2,jointAngles[1],vrep.simx_opmode_oneshot)
-    # time.sleep(2)
-    #
-    # # Load joint 3
-    # res,joint3=vrep.simxGetObjectHandle(clientID,'UR3_joint3',vrep.simx_opmode_blocking)
-    # vrep.simxSetJointTargetPosition(clientID,joint3,jointAngles[2],vrep.simx_opmode_oneshot)
-    # time.sleep(2)
-    #
-    # # Load joint 4
-    # res,joint4=vrep.simxGetObjectHandle(clientID,'UR3_joint4',vrep.simx_opmode_blocking)
-    # vrep.simxSetJointTargetPosition(clientID,joint4,jointAngles[3],vrep.simx_opmode_oneshot)
-    # time.sleep(2)
-    #
-    # # Load joint 5
-    # res,joint5=vrep.simxGetObjectHandle(clientID,'UR3_joint5',vrep.simx_opmode_blocking)
-    # vrep.simxSetJointTargetPosition(clientID,joint5,jointAngles[4],vrep.simx_opmode_oneshot)
-    # time.sleep(2)
+    # Load joint 2
+    res,joint2=vrep.simxGetObjectHandle(clientID,'UR3_joint2',vrep.simx_opmode_blocking)
+    vrep.simxSetJointTargetPosition(clientID,joint2,jointAngles[1],vrep.simx_opmode_oneshot)
+    time.sleep(2)
+
+    # Load joint 3
+    res,joint3=vrep.simxGetObjectHandle(clientID,'UR3_joint3',vrep.simx_opmode_blocking)
+    vrep.simxSetJointTargetPosition(clientID,joint3,jointAngles[2],vrep.simx_opmode_oneshot)
+    time.sleep(2)
+
+    # Load joint 4
+    res,joint4=vrep.simxGetObjectHandle(clientID,'UR3_joint4',vrep.simx_opmode_blocking)
+    vrep.simxSetJointTargetPosition(clientID,joint4,jointAngles[3],vrep.simx_opmode_oneshot)
+    time.sleep(2)
+
+    # Load joint 5
+    res,joint5=vrep.simxGetObjectHandle(clientID,'UR3_joint5',vrep.simx_opmode_blocking)
+    vrep.simxSetJointTargetPosition(clientID,joint5,jointAngles[4],vrep.simx_opmode_oneshot)
+    time.sleep(2)
 
 
 
