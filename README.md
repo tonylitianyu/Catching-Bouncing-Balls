@@ -15,6 +15,15 @@ The overall goal is to have a six-degree-of-freedom robot arm holding a basket t
 |4| 11/03/2019 | Coming soon      |
 |5| 11/24/2019 | Coming soon      |
 
+### Important File Descriptions
+
+|#| File Name          | Description     |
+|-| ------------- |-------------|
+|1| main.py    | The main running script |
+|2| FK_calculation.py    | Perform forward kinematics calculations |
+
+Other files comes from the package, don't modify them for now.
+
 ### Prerequisite Installed
 
 1. Python3
@@ -40,8 +49,6 @@ The overall goal is to have a six-degree-of-freedom robot arm holding a basket t
 7. run python3 main.py, the robot arm will move.
 
 
-
-### Important: Only modify code in main.py
 
 ### Important Message for 32-bit Windows users:
 
