@@ -65,6 +65,14 @@ if clientID!=-1:
     print(normv)
 
 
+
+
+
+    #ping pong ball
+    res,ball=vrep.simxGetObjectHandle(clientID,'Sphere',vrep.simx_opmode_blocking)
+    vrep.simxSetObjectFloatParameter(clientID,ball,3001,100,vrep.simx_opmode_streaming)
+
+
     ################################# don't modify beyond this line
     # Now send some data to V-REP in a non-blocking fashion:
     vrep.simxAddStatusbarMessage(clientID,'Hello V-REP!',vrep.simx_opmode_oneshot)
