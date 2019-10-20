@@ -11,7 +11,7 @@ The overall goal is to have a six-degree-of-freedom robot arm holding a basket t
 |-| ------------- |-------------|
 |1| 09/08/2019    | Project Proposal |
 |2| 09/22/2019    | Interface V-REP with Python using remote API |
-|3| 10/13/2019 | Coming soon      |
+|3| 10/13/2019 | Forward Kinematics      |
 |4| 11/03/2019 | Coming soon      |
 |5| 11/24/2019 | Coming soon      |
 
@@ -22,7 +22,7 @@ The overall goal is to have a six-degree-of-freedom robot arm holding a basket t
 |1| main.py    | The main running script |
 |2| FK_calculation.py    | Perform forward kinematics calculations |
 
-Other files comes from the package, don't modify them for now.
+Other files come from the package, don't modify them for now.
 
 ### Prerequisite Installed
 
