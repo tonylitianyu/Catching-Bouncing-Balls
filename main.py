@@ -11,6 +11,13 @@ except:
 
 import time
 import math
+from FK_calculation import FK_calculation
+import numpy as np
+
+
+
+
+
 print ('Program started')
 vrep.simxFinish(-1) # just in case, close all opened connections
 clientID=vrep.simxStart('127.0.0.1',19999,True,True,5000,5) # Connect to V-REP
@@ -24,28 +31,88 @@ if clientID!=-1:
     maxVel = vel*math.pi/180
     maxAccel = accel*math.pi/180
     maxJerk = jerk*math.pi/180
-    targetPos1 = 90*math.pi/180
+    targetPos1 = 50*math.pi/180
     targetVel = 0
+
 
     # sensor
     res,posensor=vrep.simxGetObjectHandle(clientID,'LaserPointer_sensor',vrep.simx_opmode_blocking)
-    code,state,point,obj,normv = vrep.simxReadProximitySensor(clientID,posensor,vrep.simx_opmode_streaming)
-    print(state)
-    print(point)
-    print(obj)
-    print(normv)
+    code,state,point,obj,normv = vrep.simxReadProximitySensor(clientID,posensor,vrep.simx_opmode_streaming) #sensor reading
+
+    res, endEffectorPos = vrep.simxGetObjectPosition(clientID,posensor,-1,vrep.simx_opmode_streaming)# initialize sensor position
+    res, endEffectorOri = vrep.simxGetObjectOrientation(clientID,posensor,-1,vrep.simx_opmode_streaming)# initialize sensor orientation
+
+
+
+
+
+    time.sleep(2)
+
+    res, endEffectorPos = vrep.simxGetObjectPosition(clientID,posensor,-1,vrep.simx_opmode_buffer)
+    print('end effector initial position:')
+    print(endEffectorPos)#get initial end effector position
+    res, endEffectorOri = vrep.simxGetObjectOrientation(clientID,posensor,-1,vrep.simx_opmode_buffer)
+    print('end effector initial orientation:')
+    print(endEffectorOri)# initialize sensor orientation
+
+
+
+    #Initialize forward kinematics calculation by inputting target joint angles.
+    jointAngles = np.array([targetPos1,0,0,targetPos1,targetPos1,0])
+
+    w1 = np.array([0,0,1])
+    q1 = np.array([0.525,-0.05,0.1475])
+    v1 = np.cross(w1,q1)
+    s1 = np.concatenate([w1,v1])
+
+    w2 = np.array([-1,0,0])
+    q2 = np.array([0.4133,-0.05,0.1519])
+    v2 = np.cross(w2,q2)
+    s2 = np.concatenate([w2,v2])
+
+    w3 = np.array([-1,0,0])
+    q3 = np.array([0.4133,-0.05,0.3955])
+    v3 = np.cross(w3,q3)
+    s3 = np.concatenate([w3,v3])
+
+    w4 = np.array([-1,0,0])
+    q4 = np.array([0.4133,-0.05,0.6088])
+    v4 = np.cross(w4,q4)
+    s4 = np.concatenate([w4,v4])
+
+    w5 = np.array([0,0,-1])
+    q5 = np.array([0.4127,-0.05,0.6930])
+    v5 = np.cross(w5,q5)
+    s5 = np.concatenate([w5,v5])
+
+    w6 = np.array([-1,0,0])
+    q6 = np.array([0.4133,-0.05,0.6941])
+    v6 = np.cross(w6,q6)
+    s6 = np.concatenate([w6,v6])
+
+    s = np.array([s1,s2,s3,s4,s5,s6])
+
+    FK = FK_calculation(jointAngles,s)
+    M = FK.find_M(endEffectorPos) #M for forward kinematics
+    T = FK.find_T()
+    print('predicted end effector final T:')
+    print(T)
+
+    time.sleep(2)
 
 
     # Load joint 1
     res,joint1=vrep.simxGetObjectHandle(clientID,'UR3_joint1',vrep.simx_opmode_blocking)
-
     code,pos = vrep.simxGetJointPosition(clientID,joint1,vrep.simx_opmode_streaming)
-    print(pos)
     vrep.simxSetJointForce(clientID,joint1,3,vrep.simx_opmode_oneshot) #set max force for this joint
     vrep.simxSetJointTargetPosition(clientID,joint1,targetPos1,vrep.simx_opmode_oneshot)
-
     #vrep.simxSetJointTargetVelocity(clientID,objs,targetVel,vrep.simx_opmode_oneshot)
     #vrep.rmlMoveToJointPositions(objs,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+    time.sleep(2)
+
+    # Load joint 2
+    res,joint2=vrep.simxGetObjectHandle(clientID,'UR3_joint2',vrep.simx_opmode_blocking)
+    vrep.simxSetJointTargetPosition(clientID,joint2,targetPos1,vrep.simx_opmode_oneshot)
     time.sleep(2)
 
     # Load joint 3
@@ -53,24 +120,39 @@ if clientID!=-1:
     vrep.simxSetJointTargetPosition(clientID,joint3,targetPos1,vrep.simx_opmode_oneshot)
     time.sleep(2)
 
+    # Load joint 4
+    res,joint4=vrep.simxGetObjectHandle(clientID,'UR3_joint4',vrep.simx_opmode_blocking)
+    vrep.simxSetJointTargetPosition(clientID,joint4,targetPos1,vrep.simx_opmode_oneshot)
+    time.sleep(2)
+
+    # Load joint 5
     res,joint5=vrep.simxGetObjectHandle(clientID,'UR3_joint5',vrep.simx_opmode_blocking)
     vrep.simxSetJointTargetPosition(clientID,joint5,-targetPos1,vrep.simx_opmode_oneshot)
     time.sleep(2)
 
 
-    code,state,point,obj,normv = vrep.simxReadProximitySensor(clientID,posensor,vrep.simx_opmode_buffer)
-    print(state)
-    print(point)
-    print(obj)
-    print(normv)
 
+    code,state,point,obj,normv = vrep.simxReadProximitySensor(clientID,posensor,vrep.simx_opmode_buffer)
+    # print(state)
+    # print(point)
+    # print(obj)
+    # print(normv)
+
+    #end effector position
+    #res, endEffector = vrep.simxGetObjectHandle(clientID,'LaserPointer_body',vrep.simx_opmode_blocking)
+    res, endEffectorPos = vrep.simxGetObjectPosition(clientID,posensor,-1,vrep.simx_opmode_buffer)
+    print('end effector final position:')
+    print(endEffectorPos)
+    res, endEffectorOri = vrep.simxGetObjectOrientation(clientID,posensor,-1,vrep.simx_opmode_buffer)
+    print('end effector final orientation:')
+    print(endEffectorOri)# initialize sensor orientation
 
 
 
 
     #ping pong ball
-    res,ball=vrep.simxGetObjectHandle(clientID,'Sphere',vrep.simx_opmode_blocking)
-    vrep.simxSetObjectFloatParameter(clientID,ball,3001,100,vrep.simx_opmode_streaming)
+    # res,ball=vrep.simxGetObjectHandle(clientID,'Sphere',vrep.simx_opmode_blocking)
+    # vrep.simxSetObjectFloatParameter(clientID,ball,3001,100,vrep.simx_opmode_streaming)
 
 
     ################################# don't modify beyond this line
