@@ -11,8 +11,8 @@ class FK_calculation:
 
     def find_M(self,init_translation):
         #rotate y by -90 degree
-        angle = -90
-        R = np.array([[math.cos(angle),0, math.sin(angle)],[0,1,0],[-math.sin(angle),0,math.cos(angle)]])
+        angle = -90*math.pi/180
+        R = np.array([[0,0, -1],[0,1,0],[1,0,0]])
 
         p = np.array([init_translation]).transpose()
         M_temp = np.concatenate([R,p],axis=1)
@@ -43,10 +43,13 @@ class FK_calculation:
 
 
     def find_T(self):
-
+        
         skew_s1 = self.find_skew_S(self.s[0])
-        T = expm(skew_s1*self.angles[0])
+
+        T = expm(skew_s1*self.angles[0]*180/math.pi)
+
         for i in range(1,6):
+
             skew_s = self.find_skew_S(self.s[i])
             T = T@expm(skew_s*self.angles[i])
 
