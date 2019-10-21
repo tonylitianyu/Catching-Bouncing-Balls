@@ -43,9 +43,14 @@ if clientID!=-1:
     res, endEffectorPos = vrep.simxGetObjectPosition(clientID,posensor,-1,vrep.simx_opmode_streaming)# initialize sensor position
     res, endEffectorOri = vrep.simxGetObjectOrientation(clientID,posensor,-1,vrep.simx_opmode_streaming)# initialize sensor orientation
 
+    #ping pong ball
+    res,ball=vrep.simxGetObjectHandle(clientID,'Sphere',vrep.simx_opmode_blocking)
+    res,balllin,ballang = vrep.simxGetObjectVelocity(clientID,ball,vrep.simx_opmode_streaming)
 
-
-
+    time.sleep(2)
+    res,balllin,ballang = vrep.simxGetObjectVelocity(clientID,ball,vrep.simx_opmode_buffer)
+    print(balllin)
+    vrep.simxSetObjectFloatParameter(clientID,ball,3001,100,vrep.simx_opmode_oneshot)
 
     time.sleep(2)
 
@@ -153,9 +158,6 @@ if clientID!=-1:
 
 
 
-    #ping pong ball
-    # res,ball=vrep.simxGetObjectHandle(clientID,'Sphere',vrep.simx_opmode_blocking)
-    # vrep.simxSetObjectFloatParameter(clientID,ball,3001,100,vrep.simx_opmode_streaming)
 
 
     ################################# don't modify beyond this line
