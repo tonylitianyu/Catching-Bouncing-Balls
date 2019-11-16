@@ -112,25 +112,25 @@ if clientID!=-1:
     #vrep.rmlMoveToJointPositions(objs,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
     time.sleep(2)
 
-    # Load joint 2
-    res,joint2=vrep.simxGetObjectHandle(clientID,'UR3_joint2',vrep.simx_opmode_blocking)
-    vrep.simxSetJointTargetPosition(clientID,joint2,jointAngles[1],vrep.simx_opmode_oneshot)
-    time.sleep(2)
-
-    # Load joint 3
-    res,joint3=vrep.simxGetObjectHandle(clientID,'UR3_joint3',vrep.simx_opmode_blocking)
-    vrep.simxSetJointTargetPosition(clientID,joint3,jointAngles[2],vrep.simx_opmode_oneshot)
-    time.sleep(2)
-
-    # Load joint 4
-    res,joint4=vrep.simxGetObjectHandle(clientID,'UR3_joint4',vrep.simx_opmode_blocking)
-    vrep.simxSetJointTargetPosition(clientID,joint4,jointAngles[3],vrep.simx_opmode_oneshot)
-    time.sleep(2)
-
-    # Load joint 5
-    res,joint5=vrep.simxGetObjectHandle(clientID,'UR3_joint5',vrep.simx_opmode_blocking)
-    vrep.simxSetJointTargetPosition(clientID,joint5,jointAngles[4],vrep.simx_opmode_oneshot)
-    time.sleep(2)
+    # # Load joint 2
+    # res,joint2=vrep.simxGetObjectHandle(clientID,'UR3_joint2',vrep.simx_opmode_blocking)
+    # vrep.simxSetJointTargetPosition(clientID,joint2,jointAngles[1],vrep.simx_opmode_oneshot)
+    # time.sleep(2)
+    #
+    # # Load joint 3
+    # res,joint3=vrep.simxGetObjectHandle(clientID,'UR3_joint3',vrep.simx_opmode_blocking)
+    # vrep.simxSetJointTargetPosition(clientID,joint3,jointAngles[2],vrep.simx_opmode_oneshot)
+    # time.sleep(2)
+    #
+    # # Load joint 4
+    # res,joint4=vrep.simxGetObjectHandle(clientID,'UR3_joint4',vrep.simx_opmode_blocking)
+    # vrep.simxSetJointTargetPosition(clientID,joint4,jointAngles[3],vrep.simx_opmode_oneshot)
+    # time.sleep(2)
+    #
+    # # Load joint 5
+    # res,joint5=vrep.simxGetObjectHandle(clientID,'UR3_joint5',vrep.simx_opmode_blocking)
+    # vrep.simxSetJointTargetPosition(clientID,joint5,jointAngles[4],vrep.simx_opmode_oneshot)
+    # time.sleep(2)
 
 
 
@@ -155,50 +155,14 @@ if clientID!=-1:
     #initialization of two balls
     res,ball0=vrep.simxGetObjectHandle(clientID,'Sphere',vrep.simx_opmode_blocking)
     res,ballpos = vrep.simxGetObjectPosition(clientID,ball0,-1,vrep.simx_opmode_streaming)
-    vrep.simxSetObjectFloatParameter(clientID,ball0,3001,100,vrep.simx_opmode_buffer)
     time.sleep(2)
 
-    # res,ball1=vrep.simxGetObjectHandle(clientID,'Sphere#1',vrep.simx_opmode_blocking)
-    # res,balllin,ballang = vrep.simxGetObjectVelocity(clientID,ball1,vrep.simx_opmode_streaming)
-    # time.sleep(2)
-    # res,balllin,ballang = vrep.simxGetObjectVelocity(clientID,ball1,vrep.simx_opmode_buffer)
-    # print('Velocity 1 is:')
-    # print(balllin)
-    # vrep.simxSetObjectFloatParameter(clientID,ball1,3001,100,vrep.simx_opmode_buffer)
-    # time.sleep(1)
-    # vrep.simxSetObjectPosition(clientID,ball1,-1,[random.uniform(-0.2,0.3),random.uniform(-0.2,0.1),random.uniform(0.1,0.2)],vrep.simx_opmode_oneshot)
-    # time.sleep(1)
-    #
-    # res,ball2=vrep.simxGetObjectHandle(clientID,'Sphere#2',vrep.simx_opmode_blocking)
-    # res,balllin,ballang = vrep.simxGetObjectVelocity(clientID,ball2,vrep.simx_opmode_streaming)
-    # time.sleep(2)
-    # res,balllin,ballang = vrep.simxGetObjectVelocity(clientID,ball2,vrep.simx_opmode_buffer)
-    # print('Velocity 2 is:')
-    # print(balllin)
-    # vrep.simxSetObjectFloatParameter(clientID,ball2,3001,100,vrep.simx_opmode_buffer)
-    # time.sleep(1)
-    # vrep.simxSetObjectPosition(clientID,ball2,-1,[random.uniform(-0.3,0.2),random.uniform(-0.2,0.2),random.uniform(0.1,0.4)],vrep.simx_opmode_oneshot)
-    # time.sleep(1)
+    #make ball jump
+    ret_code, _, _, _, _ = vrep.simxCallScriptFunction(clientID, 'Sphere', vrep.sim_scripttype_childscript, 'shootBall', [], [], [], bytearray(), vrep.simx_opmode_blocking)
 
-    # balls = []
-    # balls.append(ball0)
-    # balls.append(ball1)
-    # balls.append(ball2)
-    # while (1):
-    #     for i in range(len(balls)):
-    #         temppos = vrep.simxGetObjectPosition(clientID,balls[i],-1,vrep.simx_opmode_oneshot)
-    #         print(temppos)
-    #         vrep.simxSetObjectPosition(clientID, balls[i], -1,
-    #                                    [(temppos[1][0])+random.uniform(-0.07, 0.07), (temppos[1][1])+random.uniform(-0.07, 0.07), (temppos[1][2])+random.uniform(-0.07, 0.07)],
-    #                                    vrep.simx_opmode_streaming)
-    #         time.sleep(0.1)
 
-    for i in range(0,10000):
-        res,ballpos = vrep.simxGetObjectPosition(clientID,ball0,-1,vrep.simx_opmode_buffer)
-        height = abs(math.sin(i*math.pi/180))
-        
-        vrep.simxSetObjectPosition(clientID, ball0, -1,[ballpos[0]+0.01,ballpos[1]+0.005,height],vrep.simx_opmode_oneshot)
-        time.sleep(0.01)
+
+
 
     ################################# don't modify beyond this line
     # Now send some data to V-REP in a non-blocking fashion:
