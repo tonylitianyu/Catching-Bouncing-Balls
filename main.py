@@ -13,6 +13,7 @@ import time
 import math
 from FK_calculation import FK_calculation
 import numpy as np
+from InvK import InvK
 import random
 
 
@@ -95,10 +96,13 @@ if clientID!=-1:
 
     FK = FK_calculation(jointAngles,s)
     M = FK.find_M(endEffectorPos) #M for forward kinematics
-
     T = FK.find_T()
     print('predicted end effector final T:')
     print(T)
+    #inverse kinematics
+    IK = InvK(s,T) #T should be ball position, will implement next time
+    IK.find_M(endEffectorPos)
+    #jointAngles = IK.find_thetas()
 
     time.sleep(2)
 
