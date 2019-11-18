@@ -24,4 +24,4 @@ class InvK:
 
         thetas,success = mr.IKinSpace(self.S,self.M,self.T,thetas0,0.1,0.1)
         print(success)
-        return thetas if success else thetas0
+        return thetas
