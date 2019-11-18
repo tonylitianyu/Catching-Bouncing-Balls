@@ -45,6 +45,29 @@ if clientID!=-1:
     res, endEffectorOri = vrep.simxGetObjectOrientation(clientID,posensor,-1,vrep.simx_opmode_streaming)# initialize sensor orientation
 
 
+    # Load joint 1
+    res,joint1=vrep.simxGetObjectHandle(clientID,'UR3_joint1',vrep.simx_opmode_blocking)
+    code,posJ1 = vrep.simxGetObjectPosition(clientID,joint1,-1,vrep.simx_opmode_streaming)
+
+    # Load joint 2
+    res,joint2=vrep.simxGetObjectHandle(clientID,'UR3_joint2',vrep.simx_opmode_blocking)
+    code,posJ2 = vrep.simxGetObjectPosition(clientID,joint2,-1,vrep.simx_opmode_streaming)
+
+    #Load joint 3
+    res,joint3=vrep.simxGetObjectHandle(clientID,'UR3_joint3',vrep.simx_opmode_blocking)
+    code,posJ3 = vrep.simxGetObjectPosition(clientID,joint3,-1,vrep.simx_opmode_streaming)
+
+    #Load joint 4
+    res,joint4=vrep.simxGetObjectHandle(clientID,'UR3_joint4',vrep.simx_opmode_blocking)
+    code,posJ4 = vrep.simxGetObjectPosition(clientID,joint4,-1,vrep.simx_opmode_streaming)
+
+    # Load joint 5
+    res,joint5=vrep.simxGetObjectHandle(clientID,'UR3_joint5',vrep.simx_opmode_blocking)
+    code,posJ5 = vrep.simxGetObjectPosition(clientID,joint5,-1,vrep.simx_opmode_streaming)
+
+    #Load joint 6
+    res,joint6=vrep.simxGetObjectHandle(clientID,'UR3_joint6',vrep.simx_opmode_blocking)
+    code,posJ6 = vrep.simxGetObjectPosition(clientID,joint6,-1,vrep.simx_opmode_streaming)
 
 
     time.sleep(2)
@@ -56,43 +79,61 @@ if clientID!=-1:
     print('end effector initial orientation:')
     print(endEffectorOri)# initialize sensor orientation
 
+    #get joint position
+    code,posJ1 = vrep.simxGetObjectPosition(clientID,joint1,-1,vrep.simx_opmode_buffer)
+    code,posJ2 = vrep.simxGetObjectPosition(clientID,joint2,-1,vrep.simx_opmode_buffer)
+    code,posJ3 = vrep.simxGetObjectPosition(clientID,joint3,-1,vrep.simx_opmode_buffer)
+    code,posJ4 = vrep.simxGetObjectPosition(clientID,joint4,-1,vrep.simx_opmode_buffer)
+    code,posJ5 = vrep.simxGetObjectPosition(clientID,joint5,-1,vrep.simx_opmode_buffer)
+    code,posJ6 = vrep.simxGetObjectPosition(clientID,joint6,-1,vrep.simx_opmode_buffer)
+
+
 
 
     #Initialize forward kinematics calculation by inputting target joint angles.
-    jointAngles = np.array([targetPos1,0,targetPos1,0,0,0])
+    jointAngles = np.array([targetPos1,0,0,0,0,0])
 
     w1 = np.array([0,0,1])
-    q1 = np.array([0.00012,0.000086,0.1475])
+    #q1 = np.array([0.00012,0.000086,0.1475])
+    q1 = np.array(posJ1)
     v1 = np.cross(-w1,q1)
     s1 = np.concatenate([w1,v1])
 
 
     w2 = np.array([-1,0,0])
-    q2 = np.array([-0.1115,0.000054,0.1519])
+    #q2 = np.array([-0.1115,0.000054,0.1519])
+    q2 = np.array(posJ2)
     v2 = np.cross(-w2,q2)
     s2 = np.concatenate([w2,v2])
 
     w3 = np.array([-1,0,0])
-    q3 = np.array([-0.1115,0.00013,0.3955])
+    #q3 = np.array([-0.1115,0.00013,0.3955])
+    q3 = np.array(posJ3)
     v3 = np.cross(-w3,q3)
     s3 = np.concatenate([w3,v3])
 
     w4 = np.array([-1,0,0])
-    q4 = np.array([-0.1115,0.000085,0.6088])
+    #q4 = np.array([-0.1115,0.000085,0.6088])
+    q4 = np.array(posJ4)
     v4 = np.cross(-w4,q4)
     s4 = np.concatenate([w4,v4])
 
     w5 = np.array([0,0,1])
-    q5 = np.array([-0.1122,0.000085,0.6930])
+    #q5 = np.array([-0.1122,0.000085,0.6930])
+    q5 = np.array(posJ5)
     v5 = np.cross(-w5,q5)
     s5 = np.concatenate([w5,v5])
 
     w6 = np.array([-1,0,0])
-    q6 = np.array([-0.1115,0.000085,0.6941])
+    #q6 = np.array([-0.1115,0.000085,0.6941])
+    q6 = np.array(posJ6)
     v6 = np.cross(-w6,q6)
     s6 = np.concatenate([w6,v6])
 
     s = np.array([s1,s2,s3,s4,s5,s6])
+
+
+
 
     FK = FK_calculation(jointAngles,s)
     M = FK.find_M(endEffectorPos) #M for forward kinematics
@@ -102,39 +143,39 @@ if clientID!=-1:
     #inverse kinematics
     IK = InvK(s,T) #T should be ball position, will implement next time
     IK.find_M(endEffectorPos)
-    #jointAngles = IK.find_thetas()
+    testjointAngles = IK.find_thetas()
+    print('IK joint angles: ')
+    print(testjointAngles)
+
 
     time.sleep(2)
+
 
 
     # Load joint 1
-    res,joint1=vrep.simxGetObjectHandle(clientID,'UR3_joint1',vrep.simx_opmode_blocking)
-    code,pos = vrep.simxGetJointPosition(clientID,joint1,vrep.simx_opmode_streaming)
     vrep.simxSetJointForce(clientID,joint1,3,vrep.simx_opmode_oneshot) #set max force for this joint
     vrep.simxSetJointTargetPosition(clientID,joint1,jointAngles[0],vrep.simx_opmode_oneshot)
-    #vrep.simxSetJointTargetVelocity(clientID,objs,targetVel,vrep.simx_opmode_oneshot)
-    #vrep.rmlMoveToJointPositions(objs,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
     time.sleep(2)
 
-    # # Load joint 2
-    # res,joint2=vrep.simxGetObjectHandle(clientID,'UR3_joint2',vrep.simx_opmode_blocking)
-    # vrep.simxSetJointTargetPosition(clientID,joint2,jointAngles[1],vrep.simx_opmode_oneshot)
-    # time.sleep(2)
-    #
-    # # Load joint 3
-    # res,joint3=vrep.simxGetObjectHandle(clientID,'UR3_joint3',vrep.simx_opmode_blocking)
-    # vrep.simxSetJointTargetPosition(clientID,joint3,jointAngles[2],vrep.simx_opmode_oneshot)
-    # time.sleep(2)
-    #
-    # # Load joint 4
-    # res,joint4=vrep.simxGetObjectHandle(clientID,'UR3_joint4',vrep.simx_opmode_blocking)
-    # vrep.simxSetJointTargetPosition(clientID,joint4,jointAngles[3],vrep.simx_opmode_oneshot)
-    # time.sleep(2)
-    #
-    # # Load joint 5
-    # res,joint5=vrep.simxGetObjectHandle(clientID,'UR3_joint5',vrep.simx_opmode_blocking)
-    # vrep.simxSetJointTargetPosition(clientID,joint5,jointAngles[4],vrep.simx_opmode_oneshot)
-    # time.sleep(2)
+    # Load joint 2
+    vrep.simxSetJointTargetPosition(clientID,joint2,jointAngles[1],vrep.simx_opmode_oneshot)
+    time.sleep(2)
+
+    # Load joint 3
+    vrep.simxSetJointTargetPosition(clientID,joint3,jointAngles[2],vrep.simx_opmode_oneshot)
+    time.sleep(2)
+
+    # Load joint 4
+    vrep.simxSetJointTargetPosition(clientID,joint4,jointAngles[3],vrep.simx_opmode_oneshot)
+    time.sleep(2)
+
+    # Load joint 5
+    vrep.simxSetJointTargetPosition(clientID,joint5,jointAngles[4],vrep.simx_opmode_oneshot)
+    time.sleep(2)
+
+    # Load joint 6
+    vrep.simxSetJointTargetPosition(clientID,joint6,jointAngles[5],vrep.simx_opmode_oneshot)
+    time.sleep(2)
 
 
 

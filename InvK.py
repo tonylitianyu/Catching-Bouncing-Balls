@@ -20,6 +20,8 @@ class InvK:
         self.M = M_temp
 
     def find_thetas(self):
-        thetas0 = [0,0,0,0,0,0]
-        thetas,success = mr.IKinSpace(self.S,self.M,self.T,thetas0,0.001,0.01)
+        thetas0 = [10*math.pi/180,0,0,0,0,0]
+
+        thetas,success = mr.IKinSpace(self.S,self.M,self.T,thetas0,0.1,0.1)
+        print(success)
         return thetas if success else thetas0
