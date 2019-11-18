@@ -19,8 +19,7 @@ class FK_calculation:
         bottom = np.array([[0,0,0,1]])
         M_temp = np.concatenate([M_temp,bottom])
         self.M = M_temp
-        print(self.M)
-        print(self.s)
+
         return self.M
 
     def find_skew_W(self,w):

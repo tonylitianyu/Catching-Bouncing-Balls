@@ -33,7 +33,6 @@ if clientID!=-1:
     maxAccel = accel*math.pi/180
     maxJerk = jerk*math.pi/180
     targetPos1 = 50*math.pi/180
-    print(targetPos1)
     targetVel = 0
 
 
@@ -138,14 +137,16 @@ if clientID!=-1:
     FK = FK_calculation(jointAngles,s)
     M = FK.find_M(endEffectorPos) #M for forward kinematics
     T = FK.find_T()
-    print('predicted end effector final T:')
+    print('T from forward Kinematics: ')
     print(T)
     #inverse kinematics
+    #using code from the code library accompanying 
+    #Modern Robotics: Mechanics, Planning, and Control (Kevin Lynch and Frank Park, Cambridge University Press 2017)
     IK = InvK(s,T) #T should be ball position, will implement next time
     IK.find_M(endEffectorPos)
-    testjointAngles = IK.find_thetas()
-    print('IK joint angles: ')
-    print(testjointAngles)
+    jointAngles = IK.find_thetas()
+    print('joint angles from Inverse Kinematics: ')
+    print(jointAngles)
 
 
     time.sleep(2)
@@ -186,13 +187,13 @@ if clientID!=-1:
     # print(normv)
 
     #end effector position
-    #res, endEffector = vrep.simxGetObjectHandle(clientID,'LaserPointer_body',vrep.simx_opmode_blocking)
+
     res, endEffectorPos = vrep.simxGetObjectPosition(clientID,posensor,-1,vrep.simx_opmode_buffer)
     print('end effector final position:')
     print(endEffectorPos)
     res, endEffectorOri = vrep.simxGetObjectOrientation(clientID,posensor,-1,vrep.simx_opmode_buffer)
     print('end effector final orientation:')
-    print(endEffectorOri)# initialize sensor orientation
+    print(endEffectorOri)
 
 
 
@@ -206,6 +207,24 @@ if clientID!=-1:
     ret_code, _, _, _, _ = vrep.simxCallScriptFunction(clientID, 'Sphere', vrep.sim_scripttype_childscript, 'shootBall', [], [], [], bytearray(), vrep.simx_opmode_blocking)
 
 
+
+    res,xval=vrep.simxGetFloatSignal(clientID,"xtarget",vrep.simx_opmode_streaming)
+    time.sleep(0.1)
+    res,xval=vrep.simxGetFloatSignal(clientID,"xtarget",vrep.simx_opmode_buffer)
+    # print('x:')
+    # print(xval)
+
+    res,yval=vrep.simxGetFloatSignal(clientID,"ytarget",vrep.simx_opmode_streaming )
+    time.sleep(0.1)
+    res,yval=vrep.simxGetFloatSignal(clientID,"ytarget",vrep.simx_opmode_buffer)
+    # print('y:')
+    # print(yval)
+
+    res,zval=vrep.simxGetFloatSignal(clientID,"ztarget",vrep.simx_opmode_streaming )
+    time.sleep(0.1)
+    res,zval=vrep.simxGetFloatSignal(clientID,"ztarget",vrep.simx_opmode_buffer)
+    # print('z:')
+    # print(zval)
 
 
 

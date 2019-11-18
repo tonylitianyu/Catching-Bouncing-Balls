@@ -19,8 +19,9 @@ class InvK:
         self.M = M_temp
 
     def find_thetas(self):
-        thetas0 = [10*math.pi/180,0,0,0,0,0]
-
-        thetas,success = mr.IKinSpace(self.S,self.M,self.T,thetas0,0.1,0.1)
+        thetas0 = [0,0,0,0,0,0]
+        #using code from the code library accompanying 
+        #Modern Robotics: Mechanics, Planning, and Control (Kevin Lynch and Frank Park, Cambridge University Press 2017)
+        thetas,success = mr.IKinSpace(self.S,self.M,self.T,thetas0,0.01,0.01)
         print(success)
         return thetas if success else thetas0
