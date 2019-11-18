@@ -11,7 +11,6 @@ class InvK:
 
     def find_M(self,endEffector):
         #rotate y by -90 degree
-        angle = -90*math.pi/180
         R = np.array([[0,0, -1],[0,1,0],[1,0,0]])
         p = np.array([endEffector]).transpose()
         M_temp = np.concatenate([R,p],axis=1)
@@ -24,4 +23,4 @@ class InvK:
 
         thetas,success = mr.IKinSpace(self.S,self.M,self.T,thetas0,0.1,0.1)
         print(success)
-        return thetas if success else thetas0
+        return thetas0 if success else thetas
