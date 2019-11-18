@@ -5,7 +5,7 @@ from MRpython import modern_robotics as mr
 
 class InvK:
     def __init__(self,S_,T_):
-        self.S = S_
+        self.S = S_.transpose()
         self.M = []
         self.T = T_
 
