@@ -11,7 +11,7 @@ The overall goal is to have a six-degree-of-freedom robot arm holding a basket t
 |-| ------------- |-------------|
 |1| 09/08/2019    | Project Proposal |
 |2| 09/22/2019    | Interface V-REP with Python using remote API |
-|3| 10/13/2019 | Forward Kinematics + Moving Joints + Bouncing Balls      |
+|3| 10/13/2019 | Forward Kinematics + Moving Joints + Buggy Bouncing Balls      |
 |4| 11/17/2019 | Inverse Kinematics + Perception to detect the ball location + Smooth Bouncing Balls      |
 |5| 12/xx/2019 | Coming soon      |
 
@@ -62,5 +62,5 @@ You will need to include the 32-bit lib from V-REP, here is how:
 
 ### Reference
 
-using code from the code library accompanying Modern Robotics: Mechanics, Planning, and Control (Kevin Lynch and Frank Park, Cambridge University Press 2017)
+Using code from the code library accompanying Modern Robotics: Mechanics, Planning, and Control (Kevin Lynch and Frank Park, Cambridge University Press 2017)
 https://github.com/NxRLab/ModernRobotics
