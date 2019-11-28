@@ -69,7 +69,7 @@ if clientID!=-1:
     code,posJ6 = vrep.simxGetObjectPosition(clientID,joint6,-1,vrep.simx_opmode_streaming)
 
 
-    time.sleep(2)
+    time.sleep(1)
 
     res, endEffectorPos = vrep.simxGetObjectPosition(clientID,posensor,-1,vrep.simx_opmode_buffer)
     print('end effector initial position:')
@@ -140,7 +140,7 @@ if clientID!=-1:
     print('T from forward Kinematics: ')
     print(T)
     #inverse kinematics
-    #using code from the code library accompanying 
+    #using code from the code library accompanying
     #Modern Robotics: Mechanics, Planning, and Control (Kevin Lynch and Frank Park, Cambridge University Press 2017)
     IK = InvK(s,T) #T should be ball position, will implement next time
     IK.find_M(endEffectorPos)
@@ -149,34 +149,34 @@ if clientID!=-1:
     print(jointAngles)
 
 
-    time.sleep(2)
+    time.sleep(1)
 
 
 
     # Load joint 1
     vrep.simxSetJointForce(clientID,joint1,3,vrep.simx_opmode_oneshot) #set max force for this joint
     vrep.simxSetJointTargetPosition(clientID,joint1,jointAngles[0],vrep.simx_opmode_oneshot)
-    time.sleep(2)
+    time.sleep(1)
 
     # Load joint 2
     vrep.simxSetJointTargetPosition(clientID,joint2,jointAngles[1],vrep.simx_opmode_oneshot)
-    time.sleep(2)
+    time.sleep(1)
 
     # Load joint 3
     vrep.simxSetJointTargetPosition(clientID,joint3,jointAngles[2],vrep.simx_opmode_oneshot)
-    time.sleep(2)
+    time.sleep(1)
 
     # Load joint 4
     vrep.simxSetJointTargetPosition(clientID,joint4,jointAngles[3],vrep.simx_opmode_oneshot)
-    time.sleep(2)
+    time.sleep(1)
 
     # Load joint 5
     vrep.simxSetJointTargetPosition(clientID,joint5,jointAngles[4],vrep.simx_opmode_oneshot)
-    time.sleep(2)
+    time.sleep(1)
 
     # Load joint 6
     vrep.simxSetJointTargetPosition(clientID,joint6,jointAngles[5],vrep.simx_opmode_oneshot)
-    time.sleep(2)
+    time.sleep(1)
 
 
 
@@ -201,10 +201,28 @@ if clientID!=-1:
     #initialization of two balls
     res,ball0=vrep.simxGetObjectHandle(clientID,'Sphere',vrep.simx_opmode_blocking)
     res,ballpos = vrep.simxGetObjectPosition(clientID,ball0,-1,vrep.simx_opmode_streaming)
-    time.sleep(2)
+    time.sleep(1)
+    res,ballOrigin = vrep.simxGetObjectPosition(clientID,ball0,-1,vrep.simx_opmode_buffer)
+    time.sleep(1)
 
     #make ball jump
     ret_code, _, _, _, _ = vrep.simxCallScriptFunction(clientID, 'Sphere', vrep.sim_scripttype_childscript, 'shootBall', [], [], [], bytearray(), vrep.simx_opmode_blocking)
+
+
+    while(1):
+        #make ball jump
+        res,ballcurr = vrep.simxGetObjectPosition(clientID,ball0,-1,vrep.simx_opmode_buffer)
+        if ballcurr[0] > -0.2:
+            time.sleep(0.5)
+            res = vrep.simxSetObjectPosition(clientID,ball0,-1,ballOrigin,vrep.simx_opmode_oneshot)
+            time.sleep(1)
+            ret_code, _, _, _, _ = vrep.simxCallScriptFunction(clientID, 'Sphere', vrep.sim_scripttype_childscript, 'shootBall', [], [], [], bytearray(), vrep.simx_opmode_blocking)
+
+
+
+
+
+
 
 
 
