@@ -15,7 +15,7 @@ from FK_calculation import FK_calculation
 import numpy as np
 from InvK import InvK
 import random
-
+import pickle
 
 
 
@@ -157,10 +157,16 @@ if clientID!=-1:
         # time.sleep(0.5)
         # res = vrep.simxSetObjectPosition(clientID,ball0,-1,ballOrigin,vrep.simx_opmode_oneshot)
         # time.sleep(1)
+
     ret_code, _, force, _, _ = vrep.simxCallScriptFunction(clientID, 'Sphere', vrep.sim_scripttype_childscript, 'shootBall', [], [], [], bytearray(), vrep.simx_opmode_blocking)
-    # h_angle = math.atan2(force[1],force[0])
-    # print('angle')
-    # print(h_angle)
+    shooting_angle = math.atan2(force[1],force[0])
+    print('shooting angle')
+    print(shooting_angle)
+
+    #create shooting machine
+    res,shootingMachine = vrep.simxGetObjectHandle(clientID,'Shooting',vrep.simx_opmode_blocking)
+    res = vrep.simxSetObjectOrientation(clientID,shootingMachine,shootingMachine,[shooting_angle,0,0],vrep.simx_opmode_oneshot)
+
 
 
     time.sleep(0.5)
@@ -181,6 +187,14 @@ if clientID!=-1:
     print(h_angle)
 
     target_x = -0.2
+    if xval > 0.8:
+        target_x = -0.15
+
+    # loaded_model = pickle.load(open('model.sav', 'rb'))
+    # result = loaded_model.predict([[xval]])
+    # target_x = result[0][0]
+    # print(result)
+
     target_y = 1.975*math.tan(h_angle)
     target_z = 0.5
 

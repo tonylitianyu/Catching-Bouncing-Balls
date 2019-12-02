@@ -75,14 +75,3 @@ def toTs(S, theta):
 
 def skew4(V_b):
     return np.array([[0, -1 * V_b[2], V_b[1], V_b[3]], [V_b[2], 0, -1 * V_b[0], V_b[4]], [-1 * V_b[1], V_b[0], 0, V_b[5]], [0, 0, 0, 0]])
-
-# def evalJ(S, theta):
-#     T = [expm(skew4 * theta[i]) for i in range(S.shape[1])]
-#     J = S[:, [0]]
-#     for i in range(1, S.shape[1]):
-#         col = T[0]
-#         for j in range(1, i):
-#             col = col.dot(T[j])
-#         newterm = adj_T(col).dot(S[:, [i]])
-#         J = np.concatenate((J, newterm), axis=1)
-#     return J
