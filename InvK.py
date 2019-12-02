@@ -3,7 +3,7 @@ from scipy.linalg import expm, logm
 from numpy.linalg import inv
 import math
 from MRpython import modern_robotics as mr
-import FK_calculation
+from FK_calculation import FK_calculation
 
 class InvK:
     def __init__(self,S_,T_):
@@ -20,18 +20,19 @@ class InvK:
         M_temp = np.concatenate([M_temp,bottom])
         self.M = M_temp
 
-    def guess_thetas(self,endEffector):
+    def guess_thetas(self):
         max_iter = 100
         max_err = 0.001
         mu = 0.05
         thetas = np.zeros(((self.S).shape[1], 1))
         V = np.ones((6, 1))
         while np.linalg.norm(V) > max_err and max_iter > 0:
-            # fk = FK_calculation(thetas,self.S)
-            # fk.M = self.M
-            # curr_pose = fk.find_T()
+            #fk = FK_calculation(thetas,self.S)
+            #m = fk.find_M(endEffector)
+            #curr_pose = evalT(self.S, thetas,self.M)
             curr_pose = mr.FKinSpace(self.M, self.S, thetas)
-            V = inv_bracket(logm(endEffector.dot(inv(curr_pose))))
+            #curr_pose = fk.find_T()
+            V = inv_bracket(logm(np.dot(self.T,(inv(curr_pose)))))
             J = mr.JacobianSpace(self.S, thetas)
             pinv = inv(J.transpose().dot(J) + mu * np.identity((self.S).shape[1])).dot(J.transpose())
             thetadot = pinv.dot(V)
@@ -62,9 +63,18 @@ def inv_bracket(m):
         rtn[0] = - m[1][2] / 2
     return rtn
 
-# def skew4(V_b):
-#     return np.array([[0, -1 * V_b[2], V_b[1], V_b[3]], [V_b[2], 0, -1 * V_b[0], V_b[4]], [-1 * V_b[1], V_b[0], 0, V_b[5]], [0, 0, 0, 0]])
-#
+def evalT(S, theta, M):
+    ret = np.identity(4)
+    for t in toTs(S, theta):
+        ret = ret.dot(t)
+    return ret.dot(M)
+
+def toTs(S, theta):
+    return [expm(skew4(S[:,i]) * theta[i]) for i in range(S.shape[1])]
+
+def skew4(V_b):
+    return np.array([[0, -1 * V_b[2], V_b[1], V_b[3]], [V_b[2], 0, -1 * V_b[0], V_b[4]], [-1 * V_b[1], V_b[0], 0, V_b[5]], [0, 0, 0, 0]])
+
 # def evalJ(S, theta):
 #     T = [expm(skew4 * theta[i]) for i in range(S.shape[1])]
 #     J = S[:, [0]]
