@@ -13,7 +13,8 @@ class InvK:
 
     def find_M(self,endEffector):
         #rotate y by -90 degree
-        R = np.array([[0,0, -1],[0,1,0],[1,0,0]])
+        #R = np.array([[0,0, -1],[0,1,0],[1,0,0]])
+        R = np.array([[0,-1, 0],[1,0,0],[0,0,1]])
         p = np.array([endEffector]).transpose()
         M_temp = np.concatenate([R,p],axis=1)
         bottom = np.array([[0,0,0,1]])
@@ -42,7 +43,7 @@ class InvK:
 
     def find_thetas(self):
         thetas0,norm = self.guess_thetas()
-        #using code from the code library accompanying 
+        #using code from the code library accompanying
         #Modern Robotics: Mechanics, Planning, and Control (Kevin Lynch and Frank Park, Cambridge University Press 2017)
         thetas,success = mr.IKinSpace(self.S,self.M,self.T,thetas0,0.01,0.01)
         print(success)

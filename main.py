@@ -38,8 +38,8 @@ if clientID!=-1:
 
 
     #sensor
-    res,posensor=vrep.simxGetObjectHandle(clientID,'LaserPointer_sensor',vrep.simx_opmode_blocking)
-    code,state,point,obj,normv = vrep.simxReadProximitySensor(clientID,posensor,vrep.simx_opmode_streaming) #sensor reading
+    res,posensor=vrep.simxGetObjectHandle(clientID,'Basket',vrep.simx_opmode_blocking)
+    #code,state,point,obj,normv = vrep.simxReadProximitySensor(clientID,posensor,vrep.simx_opmode_streaming) #sensor reading
 
     res, endEffectorPos = vrep.simxGetObjectPosition(clientID,posensor,-1,vrep.simx_opmode_streaming)# initialize sensor position
     res, endEffectorOri = vrep.simxGetObjectOrientation(clientID,posensor,-1,vrep.simx_opmode_streaming)# initialize sensor orientation
@@ -145,10 +145,10 @@ if clientID!=-1:
     # ret_code, _, _, _, _ = vrep.simxCallScriptFunction(clientID, 'Sphere', vrep.sim_scripttype_childscript, 'shootBall', [], [], [], bytearray(), vrep.simx_opmode_blocking)
 
 
-    # res,xval=vrep.simxGetFloatSignal(clientID,"xtarget",vrep.simx_opmode_streaming)
-    # res,yval=vrep.simxGetFloatSignal(clientID,"ytarget",vrep.simx_opmode_streaming)
-    # res,zval=vrep.simxGetFloatSignal(clientID,"ztarget",vrep.simx_opmode_streaming)
-    #time.sleep(0.5)
+    res,xval=vrep.simxGetFloatSignal(clientID,"xtarget",vrep.simx_opmode_streaming)
+    res,yval=vrep.simxGetFloatSignal(clientID,"ytarget",vrep.simx_opmode_streaming)
+    res,zval=vrep.simxGetFloatSignal(clientID,"ztarget",vrep.simx_opmode_streaming)
+    time.sleep(1)
 
     #while(1):
         #make ball jump
@@ -158,38 +158,27 @@ if clientID!=-1:
         # res = vrep.simxSetObjectPosition(clientID,ball0,-1,ballOrigin,vrep.simx_opmode_oneshot)
         # time.sleep(1)
     ret_code, _, force, _, _ = vrep.simxCallScriptFunction(clientID, 'Sphere', vrep.sim_scripttype_childscript, 'shootBall', [], [], [], bytearray(), vrep.simx_opmode_blocking)
-    h_angle = math.atan2(force[1],force[0])
+    # h_angle = math.atan2(force[1],force[0])
+    # print('angle')
+    # print(h_angle)
+
+
+    time.sleep(0.5)
+    res,xval=vrep.simxGetFloatSignal(clientID,"xtarget",vrep.simx_opmode_buffer)
+    print('x:')
+    print(xval)
+
+    res,yval=vrep.simxGetFloatSignal(clientID,"ytarget",vrep.simx_opmode_buffer)
+    print('y:')
+    print(yval)
+
+    res,zval=vrep.simxGetFloatSignal(clientID,"ztarget",vrep.simx_opmode_buffer)
+    print('z:')
+    print(zval)
+
+    h_angle = math.atan2(yval,xval)
     print('angle')
     print(h_angle)
-
-    # while(1):
-    #     res,xval=vrep.simxGetFloatSignal(clientID,"xtarget",vrep.simx_opmode_buffer)
-    #     print('x:')
-    #     print(xval)
-    #
-    #
-    #
-    #     res,yval=vrep.simxGetFloatSignal(clientID,"ytarget",vrep.simx_opmode_buffer)
-    #     print('y:')
-    #     print(yval)
-    #
-    #
-    #
-    #     res,zval=vrep.simxGetFloatSignal(clientID,"ztarget",vrep.simx_opmode_buffer)
-    #     print('z:')
-    #     print(zval)
-    #
-    #     ballVel = math.sqrt((xval**2)+(zval**2))
-    #     bounceAngle = abs(math.atan2(zval,abs(xval)))
-    #     print(bounceAngle*(180/math.pi))
-    #     x = ((ballVel**2)*math.sin(2*bounceAngle))/9.81
-    #     print("distance: ")
-    #     print(x)
-    #     if x > 0:
-    #         break
-
-
-
 
     target_x = -0.2
     target_y = 1.975*math.tan(h_angle)
@@ -244,14 +233,6 @@ if clientID!=-1:
     #time.sleep(1)
 
 
-
-    #code,state,point,obj,normv = vrep.simxReadProximitySensor(clientID,posensor,vrep.simx_opmode_buffer)
-    # print(state)
-    # print(point)
-    # print(obj)
-    # print(normv)
-
-    #end effector position
 
     res, endEffectorPos = vrep.simxGetObjectPosition(clientID,posensor,-1,vrep.simx_opmode_buffer)
     print('end effector final position:')

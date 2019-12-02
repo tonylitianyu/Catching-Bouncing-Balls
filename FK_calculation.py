@@ -12,7 +12,7 @@ class FK_calculation:
     def find_M(self,init_translation):
         #rotate y by -90 degree
         angle = -90*math.pi/180
-        R = np.array([[0,0, -1],[0,1,0],[1,0,0]])
+        R = np.array([[0,-1, 0],[1,0,0],[0,0,1]])#np.array([[0,-1, 0],[1,0,0],[0,0,1]])
 
         p = np.array([init_translation]).transpose()
         M_temp = np.concatenate([R,p],axis=1)
