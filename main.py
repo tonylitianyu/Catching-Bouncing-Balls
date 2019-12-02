@@ -36,7 +36,8 @@ if clientID!=-1:
     targetVel = 0
 
 
-    # sensor
+
+    #sensor
     res,posensor=vrep.simxGetObjectHandle(clientID,'LaserPointer_sensor',vrep.simx_opmode_blocking)
     code,state,point,obj,normv = vrep.simxReadProximitySensor(clientID,posensor,vrep.simx_opmode_streaming) #sensor reading
 
@@ -132,55 +133,119 @@ if clientID!=-1:
     s = np.array([s1,s2,s3,s4,s5,s6])
 
 
+    #ping pong ball
+    #initialization of two balls
+    res,ball0=vrep.simxGetObjectHandle(clientID,'Sphere',vrep.simx_opmode_blocking)
+    res,ballpos = vrep.simxGetObjectPosition(clientID,ball0,-1,vrep.simx_opmode_streaming)
+    time.sleep(1)
+    res,ballOrigin = vrep.simxGetObjectPosition(clientID,ball0,-1,vrep.simx_opmode_buffer)
+    time.sleep(1)
 
+    # #make ball jump
+    # ret_code, _, _, _, _ = vrep.simxCallScriptFunction(clientID, 'Sphere', vrep.sim_scripttype_childscript, 'shootBall', [], [], [], bytearray(), vrep.simx_opmode_blocking)
+
+
+    # res,xval=vrep.simxGetFloatSignal(clientID,"xtarget",vrep.simx_opmode_streaming)
+    # res,yval=vrep.simxGetFloatSignal(clientID,"ytarget",vrep.simx_opmode_streaming)
+    # res,zval=vrep.simxGetFloatSignal(clientID,"ztarget",vrep.simx_opmode_streaming)
+    #time.sleep(0.5)
+
+    #while(1):
+        #make ball jump
+    #res,ballcurr = vrep.simxGetObjectPosition(clientID,ball0,-1,vrep.simx_opmode_buffer)
+    #if ballcurr[0] > -0.2:
+        # time.sleep(0.5)
+        # res = vrep.simxSetObjectPosition(clientID,ball0,-1,ballOrigin,vrep.simx_opmode_oneshot)
+        # time.sleep(1)
+    ret_code, _, force, _, _ = vrep.simxCallScriptFunction(clientID, 'Sphere', vrep.sim_scripttype_childscript, 'shootBall', [], [], [], bytearray(), vrep.simx_opmode_blocking)
+    h_angle = math.atan2(force[1],force[0])
+    print('angle')
+    print(h_angle)
+
+    # while(1):
+    #     res,xval=vrep.simxGetFloatSignal(clientID,"xtarget",vrep.simx_opmode_buffer)
+    #     print('x:')
+    #     print(xval)
+    #
+    #
+    #
+    #     res,yval=vrep.simxGetFloatSignal(clientID,"ytarget",vrep.simx_opmode_buffer)
+    #     print('y:')
+    #     print(yval)
+    #
+    #
+    #
+    #     res,zval=vrep.simxGetFloatSignal(clientID,"ztarget",vrep.simx_opmode_buffer)
+    #     print('z:')
+    #     print(zval)
+    #
+    #     ballVel = math.sqrt((xval**2)+(zval**2))
+    #     bounceAngle = abs(math.atan2(zval,abs(xval)))
+    #     print(bounceAngle*(180/math.pi))
+    #     x = ((ballVel**2)*math.sin(2*bounceAngle))/9.81
+    #     print("distance: ")
+    #     print(x)
+    #     if x > 0:
+    #         break
+
+
+
+
+    target_x = -0.2
+    target_y = 1.975*math.tan(h_angle)
+    target_z = 0.5
 
     FK = FK_calculation(jointAngles,s)
-    M = FK.find_M(endEffectorPos) #M for forward kinematics
+    #targetPosition = endEffectorPos
+    targetPosition = np.array([target_x,target_y,target_z])
+    M = FK.find_M(targetPosition) #M for forward kinematics
     T = FK.find_T()
     print('T from forward Kinematics: ')
     print(T)
+
+
     #inverse kinematics
     #using code from the code library accompanying
     #Modern Robotics: Mechanics, Planning, and Control (Kevin Lynch and Frank Park, Cambridge University Press 2017)
-    IK = InvK(s,T) #T should be ball position, will implement next time
+    IK = InvK(s,M) #T should be ball position, will implement next time
     IK.find_M(endEffectorPos)
     jointAngles = IK.find_thetas()
     print('joint angles from Inverse Kinematics: ')
     print(jointAngles)
 
 
-    time.sleep(1)
+
 
 
 
     # Load joint 1
-    vrep.simxSetJointForce(clientID,joint1,3,vrep.simx_opmode_oneshot) #set max force for this joint
+    #vrep.simxSetJointForce(clientID,joint1,3,vrep.simx_opmode_oneshot) #set max force for this joint
     vrep.simxSetJointTargetPosition(clientID,joint1,jointAngles[0],vrep.simx_opmode_oneshot)
-    time.sleep(1)
+    #time.sleep(1)
 
     # Load joint 2
     vrep.simxSetJointTargetPosition(clientID,joint2,jointAngles[1],vrep.simx_opmode_oneshot)
-    time.sleep(1)
+    #time.sleep(1)
 
     # Load joint 3
     vrep.simxSetJointTargetPosition(clientID,joint3,jointAngles[2],vrep.simx_opmode_oneshot)
-    time.sleep(1)
+    #time.sleep(1)
 
     # Load joint 4
     vrep.simxSetJointTargetPosition(clientID,joint4,jointAngles[3],vrep.simx_opmode_oneshot)
-    time.sleep(1)
+    #time.sleep(1)
 
     # Load joint 5
     vrep.simxSetJointTargetPosition(clientID,joint5,jointAngles[4],vrep.simx_opmode_oneshot)
-    time.sleep(1)
+    #time.sleep(1)
 
     # Load joint 6
     vrep.simxSetJointTargetPosition(clientID,joint6,jointAngles[5],vrep.simx_opmode_oneshot)
-    time.sleep(1)
+    #time.sleep(1)
 
 
 
-    code,state,point,obj,normv = vrep.simxReadProximitySensor(clientID,posensor,vrep.simx_opmode_buffer)
+    #code,state,point,obj,normv = vrep.simxReadProximitySensor(clientID,posensor,vrep.simx_opmode_buffer)
     # print(state)
     # print(point)
     # print(obj)
@@ -197,52 +262,11 @@ if clientID!=-1:
 
 
 
-    #ping pong ball
-    #initialization of two balls
-    res,ball0=vrep.simxGetObjectHandle(clientID,'Sphere',vrep.simx_opmode_blocking)
-    res,ballpos = vrep.simxGetObjectPosition(clientID,ball0,-1,vrep.simx_opmode_streaming)
-    time.sleep(1)
-    res,ballOrigin = vrep.simxGetObjectPosition(clientID,ball0,-1,vrep.simx_opmode_buffer)
-    time.sleep(1)
-
-    #make ball jump
-    ret_code, _, _, _, _ = vrep.simxCallScriptFunction(clientID, 'Sphere', vrep.sim_scripttype_childscript, 'shootBall', [], [], [], bytearray(), vrep.simx_opmode_blocking)
-
-
-    while(1):
-        #make ball jump
-        res,ballcurr = vrep.simxGetObjectPosition(clientID,ball0,-1,vrep.simx_opmode_buffer)
-        if ballcurr[0] > -0.2:
-            time.sleep(0.5)
-            res = vrep.simxSetObjectPosition(clientID,ball0,-1,ballOrigin,vrep.simx_opmode_oneshot)
-            time.sleep(1)
-            ret_code, _, _, _, _ = vrep.simxCallScriptFunction(clientID, 'Sphere', vrep.sim_scripttype_childscript, 'shootBall', [], [], [], bytearray(), vrep.simx_opmode_blocking)
 
 
 
 
 
-
-
-
-
-    res,xval=vrep.simxGetFloatSignal(clientID,"xtarget",vrep.simx_opmode_streaming)
-    time.sleep(0.1)
-    res,xval=vrep.simxGetFloatSignal(clientID,"xtarget",vrep.simx_opmode_buffer)
-    # print('x:')
-    # print(xval)
-
-    res,yval=vrep.simxGetFloatSignal(clientID,"ytarget",vrep.simx_opmode_streaming )
-    time.sleep(0.1)
-    res,yval=vrep.simxGetFloatSignal(clientID,"ytarget",vrep.simx_opmode_buffer)
-    # print('y:')
-    # print(yval)
-
-    res,zval=vrep.simxGetFloatSignal(clientID,"ztarget",vrep.simx_opmode_streaming )
-    time.sleep(0.1)
-    res,zval=vrep.simxGetFloatSignal(clientID,"ztarget",vrep.simx_opmode_buffer)
-    # print('z:')
-    # print(zval)
 
 
 
