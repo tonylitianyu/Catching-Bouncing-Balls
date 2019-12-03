@@ -191,10 +191,13 @@ if clientID!=-1:
         target_x = -0.15
 
     loaded_model = pickle.load(open('model.sav', 'rb'))
-    result = loaded_model.predict([[xval]])
+    result = loaded_model.predict([[xval,yval,zval]])
     target_x = result[0][0]
+    print(loaded_model.coef_)
     print("x-result")
     print(result)
+    if target_x < -0.35:
+        target_x = -0.2
 
     target_y = 1.975*math.tan(h_angle)
     target_z = 0.5

@@ -49,7 +49,7 @@ if clientID!=-1:
     res,zdest=vrep.simxGetFloatSignal(clientID,"zdest",vrep.simx_opmode_streaming)
     time.sleep(1)
     count = 0
-    while count < 1:
+    while count < 500:
         count += 1
         # #make ball jump
         ret_code, _, _, _, _ = vrep.simxCallScriptFunction(clientID, 'Sphere', vrep.sim_scripttype_childscript, 'shootBall', [], [], [], bytearray(), vrep.simx_opmode_blocking)
@@ -81,7 +81,7 @@ if clientID!=-1:
         # dest = [xdest,ydest,zdest]
 
         input.append([xval,yval,zval])
-        output.append([xdest])
+        output.append(xdest)
         time.sleep(1)
         res = vrep.simxSetObjectPosition(clientID,ball0,-1,ballOrigin,vrep.simx_opmode_oneshot)
         time.sleep(1)
@@ -98,12 +98,14 @@ if clientID!=-1:
     # pickle.dump(regressor, open(filename, 'wb'))
     # ans = regressor.predict([[0.9369611740112305]])
     # print(ans)#-0.0031253783963620663
-    reg = LinearRegression().fit(input, output)
+    reg = LinearRegression().fit(np.array(input), np.array(output).reshape(-1, 1))
     filename = 'model.sav'
     pickle.dump(reg, open(filename, 'wb'))
     ans = reg.predict([[0.9369611740112305,-0.21374374628067017,6.679958343505859]])
     print(ans)#-0.0031253783963620663
+    print(reg.coef_)
 
+    #-2.75873539
 
 
 
