@@ -28,7 +28,7 @@ class InvK:
         V = np.ones((6, 1))
         while np.linalg.norm(V) > max_err and max_iter > 0:
             curr_pose = mr.FKinSpace(self.M, self.S, thetas)
-            V = inv_bracket(logm(np.dot(self.T,(inv(curr_pose)))))
+            V = inv_skew(logm(np.dot(self.T,(inv(curr_pose)))))
             J = mr.JacobianSpace(self.S, thetas)
             pinv = inv(J.transpose().dot(J) + mu * np.identity((self.S).shape[1])).dot(J.transpose())
             thetadot = pinv.dot(V)
@@ -45,15 +45,13 @@ class InvK:
         return thetas if success else thetas0
 
 """helper function"""
-def inv_bracket(m):
-    rt = []
-    m = np.asarray(m)
+def inv_skew(m):
+    col = []
     if (m.shape == (4, 4)):
-        rt = np.block([[inv_bracket(m[:3, :3])], [m[:3, 3:]]])
+        col = np.concatenate((inv_skew(m[:3, :3]), m[:3, 3:]),axis=0)
     elif (m.shape == (3, 3)):
-        m = m - m.transpose()
-        rt = np.zeros((3, 1))
-        rt[2] = - m[0][1] / 2
-        rt[1] =   m[0][2] / 2
-        rt[0] = - m[1][2] / 2
-    return rt
+        col = np.zeros((3, 1))
+        col[0] = m[2][1]
+        col[1] = m[0][2]
+        col[2] = m[1][0]
+    return col
