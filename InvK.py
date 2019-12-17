@@ -20,38 +20,37 @@ class InvK:
         M_temp = np.concatenate([M_temp,bottom])
         self.M = M_temp
 
-    def guess_thetas(self):
-        max_iter = 100
-        max_err = 0.001
-        mu = 0.05
-        thetas = np.zeros(((self.S).shape[1], 1))
-        V = np.ones((6, 1))
-        while np.linalg.norm(V) > max_err and max_iter > 0:
-            curr_pose = mr.FKinSpace(self.M, self.S, thetas)
-            V = inv_skew(logm(np.dot(self.T,(inv(curr_pose)))))
-            J = mr.JacobianSpace(self.S, thetas)
-            pinv = inv(J.transpose().dot(J) + mu * np.identity((self.S).shape[1])).dot(J.transpose())
-            thetadot = pinv.dot(V)
-            thetas = thetas + thetadot
-            max_iter -= 1;
-        return (thetas, np.linalg.norm(V))
+
+    def newton_theta(self):
+        count = 0
+        theta = [[0],[0],[0],[0],[0],[0]]
+        #V = np.zeros((6,1))
+        diff = 1
+        while diff > 0.01 and count < 100:
+            currT = mr.FKinSpace(self.M, self.S, theta)
+            V_b = logm(np.dot(self.T,(inv(currT))))
+            V = np.zeros((6,1))
+            R = V_b[:3,:3]
+            p = V_b[:3,3:]
+            V[0] = R[2][1]
+            V[1] = R[0][2]
+            V[2] = R[1][0]
+            V[3] = p[0]
+            V[4] = p[1]
+            V[5] = p[2]
+            J = mr.JacobianSpace(self.S, theta)
+            pinv = inv(J.T@J+ 0.01 * np.identity(6))@J.T
+            theta = theta+pinv@V
+            count = count+1
+            diff = np.linalg.norm(V)
+        return theta
+
 
     def find_thetas(self):
-        thetas0,norm = self.guess_thetas()
+
+        thetas0 = self.newton_theta()
         #using code from the code library accompanying
         #Modern Robotics: Mechanics, Planning, and Control (Kevin Lynch and Frank Park, Cambridge University Press 2017)
         thetas,success = mr.IKinSpace(self.S,self.M,self.T,thetas0,0.01,0.01)
-        print(success)
-        return thetas if success else thetas0
 
-"""helper function"""
-def inv_skew(m):
-    col = []
-    if (m.shape == (4, 4)):
-        col = np.concatenate((inv_skew(m[:3, :3]), m[:3, 3:]),axis=0)
-    elif (m.shape == (3, 3)):
-        col = np.zeros((3, 1))
-        col[0] = m[2][1]
-        col[1] = m[0][2]
-        col[2] = m[1][0]
-    return col
+        return thetas if success else thetas0

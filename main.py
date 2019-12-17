@@ -195,7 +195,9 @@ if clientID!=-1:
     target_x = result[0][0]
     print(loaded_model.coef_)
     print("x-result")
-    print(result)
+
+    target_x = -2.2433+0.25+xval*1.9804+zval*0.071423
+    print(target_x)
     if target_x < -0.35:
         target_x = -0.2
 

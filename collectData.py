@@ -19,7 +19,7 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.linear_model import LinearRegression
 import pickle
-
+import pandas as pd
 
 
 print ('Program started')
@@ -98,6 +98,10 @@ if clientID!=-1:
     # pickle.dump(regressor, open(filename, 'wb'))
     # ans = regressor.predict([[0.9369611740112305]])
     # print(ans)#-0.0031253783963620663
+    csvArr = np.concatenate((np.array(input), np.array([output]).T), axis=1)
+    pd.DataFrame(csvArr).to_csv("regre.csv")
+
+
     reg = LinearRegression().fit(np.array(input), np.array(output).reshape(-1, 1))
     filename = 'model.sav'
     pickle.dump(reg, open(filename, 'wb'))
