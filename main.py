@@ -200,7 +200,7 @@ if clientID!=-1:
     print(target_x)
     if target_x < -0.35:
         target_x = -0.2
-
+    #1.975
     target_y = 1.975*math.tan(h_angle)
     target_z = 0.5
 

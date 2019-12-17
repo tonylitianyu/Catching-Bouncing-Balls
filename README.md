@@ -12,8 +12,8 @@ The overall goal is to have a six-degree-of-freedom robot arm holding a basket t
 |1| 09/08/2019    | Project Proposal |
 |2| 09/22/2019    | Interface V-REP with Python using remote API |
 |3| 10/13/2019 | Forward Kinematics + Moving Joints + Buggy Bouncing Balls      |
-|4| 11/17/2019 | Inverse Kinematics + Perception to detect the ball location + Smooth Bouncing Balls      |
-|5| 12/xx/2019 | Coming soon      |
+|4| 11/17/2019 | Inverse Kinematics + Linear Regression + Smooth Bouncing Balls      |
+|5| 12/16/2019 | Project Finished with 73.3% accuracy      |
 
 ### Important File Descriptions
 
@@ -22,6 +22,7 @@ The overall goal is to have a six-degree-of-freedom robot arm holding a basket t
 |1| main.py    | The main running script |
 |2| FK_calculation.py    | Perform forward kinematics calculations |
 |3| InvK.py    | Perform inverse kinematics |
+|4| collectData.py | Collect Data for Linear Regression |
 
 Other files come from the package, don't modify them for now.
 

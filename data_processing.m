@@ -42,7 +42,18 @@ xlabel('initial velocity (m/s)')
 ylabel('second bounce location (m)')
 hold off;
 
+figure(9);clf;
+hold on;
+grid on;
+scatter(z,pre_x)
+ylim([-0.5,0.5])
+xlim([6.0,7.3])
 
+fit = polyfit(z,pre_x,1)
+plot(z,fit(1)*z+fit(2),'lineWidth',5)
+xlabel('initial velocity (m/s)')
+ylabel('second bounce location (m)')
+hold off;
 
 
 

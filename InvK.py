@@ -28,7 +28,7 @@ class InvK:
         diff = 1
         while diff > 0.01 and count < 100:
             currT = mr.FKinSpace(self.M, self.S, theta)
-            V_b = logm(np.dot(self.T,(inv(currT))))
+            V_b = logm(self.T@inv(currT))
             V = np.zeros((6,1))
             R = V_b[:3,:3]
             p = V_b[:3,3:]
