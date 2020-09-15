@@ -1,5 +1,5 @@
-# ECE470_FA2019
-## The Repo for ECE470 Fall 2019 Project
+# Catching Bouncing Balls with UR3 Robot Arm
+## The Repo for UIUC ECE470 Fall 2019 Project
 
 ### The goal of this project
 
