@@ -5,13 +5,11 @@
 
 The overall goal is to have a six-degree-of-freedom robot arm holding a basket to collect ping-pong balls shot from a machine in the V-REP simulation environment.
 
-### Screenshot
-![Screenshot](ece470.png)
-
 ### Project Final Demo Video
-
 https://www.youtube.com/watch?v=hjoLDNa-Cf8
 
+### Screenshot
+![Screenshot](ece470.png)
 
 ### Project Milestone
 
